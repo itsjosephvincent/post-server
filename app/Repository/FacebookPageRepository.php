@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Auth;
 
 class FacebookPageRepository
 {
+    public function findMany(object $payload, string $sortField, string $sortOrder)
+    {
+        $user = Auth::user();
+
+        return FacebookPage::where('user_id', $user->id)
+            ->filter($payload->all())
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10);
+    }
+
     public function create(object $payload)
     {
         $user = Auth::user();

@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Traits\UsesUuid;
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FacebookPage extends Model
 {
-    use UsesUuid;
+    use Filterable, UsesUuid;
 
     protected $fillable = [
         'uuid',
