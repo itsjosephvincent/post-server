@@ -20,4 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/users/current/online', [UserController::class, 'user']);
     Route::put('/users/{uuid}/update-password', [UserController::class, 'updatePassword']);
+
+    Route::get('/facebook-pages/{uuid}/posts', [FacebookPageController::class, 'posts']);
+    Route::get('/facebook-pages/next/new/posts', [FacebookPageController::class, 'nextPost']);
 });

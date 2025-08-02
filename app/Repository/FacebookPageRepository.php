@@ -17,6 +17,11 @@ class FacebookPageRepository
             ->paginate(10);
     }
 
+    public function findByUuid(string $uuid)
+    {
+        return FacebookPage::where('uuid', $uuid)->first();
+    }
+
     public function create(object $payload)
     {
         $user = Auth::user();

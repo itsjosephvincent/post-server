@@ -19,4 +19,14 @@ class FacebookPageController extends Controller
     {
         return $this->facebookPageService->findPages($request);
     }
+
+    public function posts(string $uuid)
+    {
+        return $this->facebookPageService->getFacebookPagePosts($uuid);
+    }
+
+    public function nextPost(Request $request)
+    {
+        return $this->facebookPageService->getNextFacebookPagePosts($request);
+    }
 }
