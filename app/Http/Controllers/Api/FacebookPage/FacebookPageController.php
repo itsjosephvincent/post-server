@@ -29,4 +29,9 @@ class FacebookPageController extends Controller
     {
         return $this->facebookPageService->getNextFacebookPagePosts($request);
     }
+
+    public function getInsights(Request $request)
+    {
+        return $this->facebookPageService->getComments($request);
+    }
 }

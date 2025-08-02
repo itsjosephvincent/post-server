@@ -23,4 +23,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/facebook-pages/{uuid}/posts', [FacebookPageController::class, 'posts']);
     Route::get('/facebook-pages/next/new/posts', [FacebookPageController::class, 'nextPost']);
+    Route::get('/facebook-pages/all/post/insights', [FacebookPageController::class, 'getInsights']);
 });

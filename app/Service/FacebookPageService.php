@@ -42,11 +42,8 @@ class FacebookPageService
 
         $pageId = $facebookPage->page_id;
         $accessToken = $facebookPage->access_token;
-
-        $baseUri = "https://graph.facebook.com/v23.0/$pageId/posts?limit=10&&access_token=$accessToken";
-
+        $baseUri = "https://graph.facebook.com/$pageId/posts?limit=10&&access_token=$accessToken";
         $response = Http::get($baseUri);
-
         $postResponse = json_decode($response);
 
         return $postResponse;
@@ -54,11 +51,43 @@ class FacebookPageService
 
     public function getNextFacebookPagePosts(object $payload)
     {
-        $url = $payload->next_url.'&after='.$payload->cursor;
+        $url = $payload->next_url;
         $response = Http::get($url);
-
         $postResponse = json_decode($response);
 
         return $postResponse;
+    }
+
+    public function getComments(object $payload)
+    {
+        $facebookPage = $this->facebookPageRepository->findByUuid($payload->page_uuid);
+        $postId = $payload->post_id;
+        $accessToken = $facebookPage->access_token;
+
+        $allComments = [];
+
+        $url = "https://graph.facebook.com/$postId/comments?limit=10&access_token=$accessToken";
+        $response = Http::get($url);
+
+        $commentResponse = json_decode($response);
+
+        $commenterIds = [];
+        foreach ($commentResponse as $data) {
+            $commenterIds[] = $data->from->id;
+        }
+
+        // while ($url) {
+        //     $response = Http::get($url);
+        //     $commentResponse = json_decode($response->body());
+
+        //     if (!empty($commentResponse->data)) {
+        //         foreach ($commentResponse->data as $data) {
+        //             $allComments[] = $data;
+        //         }
+        //     }
+        //     $url = $commentResponse->paging->next ?? null;
+        // }
+
+        logger($response);
     }
 }
