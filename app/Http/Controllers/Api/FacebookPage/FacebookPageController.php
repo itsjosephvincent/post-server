@@ -20,7 +20,7 @@ class FacebookPageController extends Controller
         return $this->facebookPageService->findPages($request);
     }
 
-    public function posts(string $uuid)
+    public function show(string $uuid)
     {
         return $this->facebookPageService->getFacebookPagePosts($uuid);
     }
@@ -30,8 +30,8 @@ class FacebookPageController extends Controller
         return $this->facebookPageService->getNextFacebookPagePosts($request);
     }
 
-    public function getInsights(Request $request)
+    public function postInsights(Request $request)
     {
-        return $this->facebookPageService->getComments($request);
+        return $this->facebookPageService->getReactInsights($request);
     }
 }

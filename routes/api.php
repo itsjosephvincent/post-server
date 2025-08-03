@@ -18,10 +18,13 @@ Route::middleware('auth:sanctum')->group(function () {
         'facebook-pages' => FacebookPageController::class,
     ]);
 
-    Route::get('/users/current/online', [UserController::class, 'user']);
-    Route::put('/users/{uuid}/update-password', [UserController::class, 'updatePassword']);
+    Route::prefix('users')->group(function () {
+        Route::get('/current/online', [UserController::class, 'user']);
+        Route::put('/{uuid}/update-password', [UserController::class, 'updatePassword']);
+    });
 
-    Route::get('/facebook-pages/{uuid}/posts', [FacebookPageController::class, 'posts']);
-    Route::get('/facebook-pages/next/new/posts', [FacebookPageController::class, 'nextPost']);
-    Route::get('/facebook-pages/all/post/insights', [FacebookPageController::class, 'getInsights']);
+    Route::prefix('facebook-pages')->group(function () {
+        Route::get('/next/post', [FacebookPageController::class, 'nextPost']);
+        Route::get('/post/insights', [FacebookPageController::class, 'postInsights']);
+    });
 });

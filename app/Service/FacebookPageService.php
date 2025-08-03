@@ -58,35 +58,45 @@ class FacebookPageService
         return $postResponse;
     }
 
-    public function getComments(object $payload)
+    public function getInsights(object $payload)
     {
         $facebookPage = $this->facebookPageRepository->findByUuid($payload->page_uuid);
         $postId = $payload->post_id;
         $accessToken = $facebookPage->access_token;
 
         $allComments = [];
-
-        $url = "https://graph.facebook.com/$postId/comments?limit=10&access_token=$accessToken";
-        $response = Http::get($url);
-
+        $commentUrl = "https://graph.facebook.com/$postId/comments?limit=10&access_token=$accessToken";
+        $response = Http::get($commentUrl);
         $commentResponse = json_decode($response);
+        $totalComments = 0;
+        while ($commentUrl) {
+            $response = Http::get($commentUrl);
+            $commentResponse = json_decode($response->body());
 
-        $commenterIds = [];
-        foreach ($commentResponse as $data) {
-            $commenterIds[] = $data->from->id;
+            if (!empty($commentResponse->data)) {
+                foreach ($commentResponse->data as $data) {
+                    $allComments[] = $data;
+                    $totalComments++;
+                }
+            }
+            $commentUrl = $commentResponse->paging->next ?? null;
         }
 
-        // while ($url) {
-        //     $response = Http::get($url);
-        //     $commentResponse = json_decode($response->body());
+        logger($allComments);
+        logger($totalComments);
+    }
 
-        //     if (!empty($commentResponse->data)) {
-        //         foreach ($commentResponse->data as $data) {
-        //             $allComments[] = $data;
-        //         }
-        //     }
-        //     $url = $commentResponse->paging->next ?? null;
-        // }
+    public function getReactInsights(object $payload)
+    {
+        $facebookPage = $this->facebookPageRepository->findByUuid($payload->page_uuid);
+        $postId = $payload->post_id;
+        $accessToken = $facebookPage->access_token;
+
+        $allReacts = [];
+
+        $reactsUrl = "https://graph.facebook.com/v23.0/$postId/reactions?summary=total_count&access_token=$accessToken";
+        $response = Http::get($reactsUrl);
+        $reactResponse = json_decode($response);
 
         logger($response);
     }
