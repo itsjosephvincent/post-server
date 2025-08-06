@@ -26,5 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('facebook-pages')->group(function () {
         Route::get('/next/post', [FacebookPageController::class, 'nextPost']);
         Route::get('/post/insights', [FacebookPageController::class, 'postInsights']);
+        Route::get('/post/react/insights', [FacebookPageController::class, 'postReactInsights']);
     });
 });

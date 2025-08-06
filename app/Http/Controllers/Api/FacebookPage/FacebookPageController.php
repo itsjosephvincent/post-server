@@ -32,6 +32,11 @@ class FacebookPageController extends Controller
 
     public function postInsights(Request $request)
     {
+        return $this->facebookPageService->getInsights($request);
+    }
+
+    public function postReactInsights(Request $request)
+    {
         return $this->facebookPageService->getReactInsights($request);
     }
 }

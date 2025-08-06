@@ -64,26 +64,14 @@ class FacebookPageService
         $postId = $payload->post_id;
         $accessToken = $facebookPage->access_token;
 
-        $allComments = [];
-        $commentUrl = "https://graph.facebook.com/$postId/comments?limit=10&access_token=$accessToken";
-        $response = Http::get($commentUrl);
-        $commentResponse = json_decode($response);
-        $totalComments = 0;
-        while ($commentUrl) {
-            $response = Http::get($commentUrl);
-            $commentResponse = json_decode($response->body());
+        $response = Http::get("https://graph.facebook.com/v23.0/{$postId}/comments?summary=total_count&access_token={$accessToken}");
+        $data = json_decode($response->body());
 
-            if (!empty($commentResponse->data)) {
-                foreach ($commentResponse->data as $data) {
-                    $allComments[] = $data;
-                    $totalComments++;
-                }
-            }
-            $commentUrl = $commentResponse->paging->next ?? null;
-        }
-
-        logger($allComments);
-        logger($totalComments);
+        return response()->json([
+            'data' => [
+                'total_comments' => $data->summary->total_count,
+            ],
+        ], Response::HTTP_OK);
     }
 
     public function getReactInsights(object $payload)
@@ -92,12 +80,13 @@ class FacebookPageService
         $postId = $payload->post_id;
         $accessToken = $facebookPage->access_token;
 
-        $allReacts = [];
+        $response = Http::get("https://graph.facebook.com/v23.0/{$postId}/reactions?summary=total_count&access_token={$accessToken}");
+        $data = json_decode($response->body());
 
-        $reactsUrl = "https://graph.facebook.com/v23.0/$postId/reactions?summary=total_count&access_token=$accessToken";
-        $response = Http::get($reactsUrl);
-        $reactResponse = json_decode($response);
-
-        logger($response);
+        return response()->json([
+            'data' => [
+                'total_reacts' => $data->summary->total_count,
+            ],
+        ], Response::HTTP_OK);
     }
 }

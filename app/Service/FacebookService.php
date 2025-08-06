@@ -35,6 +35,7 @@ class FacebookService
                 'client_id' => env('FACEBOOK_CLIENT_ID'),
                 'redirect_uri' => env('FACEBOOK_LOGIN_REDIRECT'),
                 'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+                'scope' => 'pages_read_engagement,pages_manage_engagement,pages_show_list,pages_read_user_content,public_profile',
                 'code' => $payload->code,
             ];
 
