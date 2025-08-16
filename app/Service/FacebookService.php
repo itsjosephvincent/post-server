@@ -35,13 +35,14 @@ class FacebookService
                 'client_id' => env('FACEBOOK_CLIENT_ID'),
                 'redirect_uri' => env('FACEBOOK_LOGIN_REDIRECT'),
                 'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-                'scope' => 'pages_read_engagement,pages_manage_engagement,pages_show_list,pages_read_user_content,public_profile',
+                'scope' => 'public_profile,read_insights,pages_show_list,pages_read_engagement,pages_read_user_content,pages_manage_posts,pages_manage_engagement',
                 'code' => $payload->code,
             ];
 
             $response = Http::get($tokenUri, $params);
-            $response = json_decode($response);
-            $accessToken = $response->access_token;
+            $response = $response->json();
+            logger($response);
+            $accessToken = $response['access_token'];
             $appSecret = env('FACEBOOK_CLIENT_SECRET');
             $appSecretProof = hash_hmac('sha256', $accessToken, $appSecret);
             $profileUri = 'https://graph.facebook.com/v23.0/me';
@@ -81,9 +82,9 @@ class FacebookService
     public function saveFacebookPages($profileId, $accessToken)
     {
         $response = Http::get('https://graph.facebook.com/v23.0/oauth/access_token?grant_type=fb_exchange_token&client_id='.env('FACEBOOK_CLIENT_ID').'&client_secret='.env('FACEBOOK_CLIENT_SECRET').'&fb_exchange_token='.$accessToken);
-        $response = json_decode($response);
+        $response = $response->json();
 
-        $accessToken = $response->access_token;
+        $accessToken = $response['access_token'];
 
         $pageResponse = Http::get('https://graph.facebook.com/v23.0/'.$profileId.'/accounts?fields=name,access_token,id&access_token='.$accessToken);
 
